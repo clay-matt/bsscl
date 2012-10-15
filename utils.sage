@@ -180,16 +180,93 @@ def mod_value(c_type,bs_m,bs_n):
 
 def X_variable_list(Gamma_g,bs_m,bs_n):
     GammaComponents = Gamma_g.graph.strongly_connected_components_subgraphs()
+    bs_Max = max(bs_m,bs_n)
     X = []
     for C in GammaComponents:
-        cycles = C.all_cycles_iterator(max_length=max(bs_m,bs_n)*C.size())
-        while True:
-            try: c = cycles.next()
-            except StopIteration: break
-            c_degree = cycle_degree(c,Gamma_g.turn_degree)
-            c_type = cycle_type(c,Gamma_g.turn_type)
-            if (c_degree % mod_value(c_type,bs_m,bs_n)) == 0:
-                X.append(c)
+        scycles = C.all_simple_cycles()
+        ncycles = len(scycles)
+        sdegrees = []
+        stypes = []
+        # compute cycle degrees and types
+        for c in scycles:
+            sdegrees.append(cycle_degree(c,Gamma_g.turn_degree))
+            stypes.append(cycle_type(c,Gamma_g.turn_type))
+        type_m = []
+        type_n = []
+        # record the indices of the cycles of type m and n
+        for i in range(0,ncycles):
+            if stypes[i] == 1:
+                type_m.append(i)
+            elif stypes[i] == 2:
+                type_n.append(i)
+        ntype_m = len(type_m)
+        ntype_n = len(type_n)
+        # find cycles of type_m that are build out of at most m simple cycles and have degree 0 mod m
+        Weights = list(IntegerVectors(bs_m,ntype_m))
+        for w in Weights:
+            c_degree = 0
+            for i in range(0,ntype_m):
+                c_degree += w[i]*sdegrees[type_m[i]]
+            if (c_degree % mod_value(1,bs_m,bs_n)) == 0: 
+                # test whether the sum is a cycle
+                c_edges={} # dictionary of edges in the sum
+                edge_set=[]
+                for e in C.edges(labels=False):
+                    ne = 0
+                    for i in range(0,ntype_m):
+                        ne += w[i]*occurance_edge(scycles[type_m[i]],e)
+                    c_edges[e] = ne
+                    if ne != 0: edge_set.append(e)
+                c_subgraph = C.subgraph(edges=edge_set)
+                for v in c_subgraph.vertices():
+                    if c_subgraph.degree(v) == 0:
+                        c_subgraph.delete_vertex(v)
+                if c_subgraph.is_connected():
+                    X.append(c_edges)
+        # find cycles of type n that are build out of at most n simple cycles and have degree 0 mod n
+        Weights = list(IntegerVectors(bs_n,ntype_n))
+        for w in Weights:
+            c_degree = 0
+            for i in range(0,ntype_m):
+                c_degree += w[i]*sdegrees[type_n[i]]
+            if (c_degree % mod_value(2,bs_m,bs_n)) == 0: 
+                # test whether the sum is a cycle
+                c_edges={} # dictionary of edges in the sum
+                edge_set=[]
+                for e in C.edges(labels=False):
+                    ne = 0
+                    for i in range(0,ntype_n):
+                        ne += w[i]*occurance_edge(scycles[type_n[i]],e)
+                    c_edges[e] = ne
+                    if ne != 0: edge_set.append(e)
+                c_subgraph = C.subgraph(edges=edge_set)
+                for v in c_subgraph.vertices():
+                    if c_subgraph.degree(v) == 0:
+                        c_subgraph.delete_vertex(v)
+                if c_subgraph.is_connected():
+                    X.append(c_edges)
+        # find cycles of mixed type that are build out of at most max(m,n) simple cycles and have degree 0 mod gcd(m,n)
+        Weights = list(IntegerVectors(bs_Max,ncycles))
+        for w in Weights:
+            c_degree = 0
+            for i in range(0,ncycles):
+                c_degree += w[i]*sdegrees[i]
+            if (c_degree % mod_value(0,bs_m,bs_n)) == 0: 
+                # test whether the sum is a cycle
+                c_edges={} # dictionary of edges in the sum
+                edge_set=[]
+                for e in C.edges(labels=False):
+                    ne = 0
+                    for i in range(0,ncycles):
+                        ne += w[i]*occurance_edge(scycles[i],e)
+                    c_edges[e] = ne
+                    if ne != 0: edge_set.append(e)
+                c_subgraph = C.subgraph(edges=edge_set)
+                for v in c_subgraph.vertices():
+                    if c_subgraph.degree(v) == 0:
+                        c_subgraph.delete_vertex(v)
+                if c_subgraph.is_connected():
+                    X.append(c_edges)
     return X
 
 ################################
@@ -215,5 +292,15 @@ def occurance_vertex(p,v):
     if v == p[0] and p[0] == p[-1]:
         return p.count(v)-1
     return p.count(v)
+    
+################################
+
+def occurance_vertex_dict(e_dict,v):
+    # counts how many times the vertex v appears in the edge dictionary
+    nv = 0
+    for edge in e_dict.keys():
+        if edge[0] == v:
+            nv += e_dict[edge]
+    return nv
     
 ################################
