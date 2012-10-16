@@ -1,0 +1,85 @@
+#############################
+ 
+Stable Commutator Length in BS(m,l)
+
+Description: Sage/Python scripts to compute stable commutator length in the 
+Baumslag-Solitar group BS(m,l):
+
+BS(m,l) = < a,t | t a^m T = a^l >
+
+#############################
+
+Two ways to compute scl(g):
+
+** Command-line **
+
+In the directory containing the files enter:
+
+sage main.sage g m l v
+
+where:
+	g is a string in a,A,t,T representing the element
+	m integer
+	l integer
+	v is the verbosity flag, anything here will toggle verbosity
+
+Example:
+
+sage main.sage 'ataT' 2 5 v
+
+The output of this command is:
+
+********
+
+m,l = 2,5
+g = atAT
+Turn Degrees: [1, -1]
+Turn Types: [2, 1]
+Plotting turn graph...
+Turn graph saved to /Users/mclay/Programs/Sage/SCLGBS/ataT.png
+Setting up the linear programming problem...
+X variables = [{(0, 0): 5}, {(1, 1): 2}, {(1, 1): 4}]
+Maximization:
+  x_0 +x_1 +x_2
+Constraints:
+  Dual Edge (0, 0): 0.0 <= 5.0 x_0 -2.0 x_1 -4.0 x_2 <= 0.0
+  Normalize n(s) = 1: 2.0 <= 5.0 x_0 <= 2.0
+Variables:
+  x_0 is a continuous variable (min=0.0, max=+oo)
+  x_1 is a continuous variable (min=0.0, max=+oo)
+  x_2 is a continuous variable (min=0.0, max=+oo)
+Linear Programming Solution = 1.4
+0.4 : {(0, 0): 5}
+1.0 : {(1, 1): 2}
+scl(atAT) = 0.3
+
+********
+
+Note: the output gets very big very quickly, consider redirecting output to a file.
+
+** In a Sage sesstion **
+
+Enter Sage and load the file scl.sage via: 
+
+load "scl.sage"
+
+To comute scl(g) enter:
+
+scl(g,m,l,v)
+
+where:
+      g is a string in a,A,t,T representing the element	
+      m integer
+      l integer
+      v verbosity, either True or False 
+
+Example:
+
+scl('ataT',2,5,True)
+
+The output is the same as above.
+
+#############################
+
+Report bugs, issues and problems to:
+mattclay@uark.edu

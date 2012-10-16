@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 121010
+# version 121016
 
 ################################
 
@@ -18,7 +18,7 @@ if len(sys.argv) < 4:
 g = sys.argv[1]
 m = int(sys.argv[2])
 n = int(sys.argv[3])
-verbose = True if len(sys.srgv)==5 else verbose = False
+verbose = True if len(sys.argv)==5 else False
 
 # compute scl
 scl(g,m,n,verbose)
