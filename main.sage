@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 121016
+# version 121017
 
 ################################
 
@@ -21,4 +21,6 @@ n = int(sys.argv[3])
 verbose = True if len(sys.argv)==5 else False
 
 # compute scl
-scl(g,m,n,verbose)
+scl_g = scl(g,m,n,verbose)
+
+if verbose == False: print scl_g

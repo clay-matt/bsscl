@@ -14,6 +14,8 @@ def scl(g,m,l,verbose = False):
     # compute the scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
 
+    MAX_nX = 100 # cap on number of variable to be displayed on screen
+
     if t_exp(g) != 0:
         print 'scl({0}) is not defined as |{1}|_t != 0'.format(g,g)
         return
@@ -51,7 +53,13 @@ def scl(g,m,l,verbose = False):
     Xi = range(nX)
 
     if verbose:
-        print 'X variables = {0}'.format(X)
+        print 'There are {0} variables.'.format(nX)
+        if nX < MAX_nX:
+            print 'X variables = {0}'.format(X)
+        else:
+            filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
+            save(X,filename)
+            print 'X has been saved to {0}'.format(filename)
     # end if verbose
         
     # set up linear programming
@@ -70,7 +78,12 @@ def scl(g,m,l,verbose = False):
                       name = 'Normalize n(s) = 1')
 
     if verbose:
-        lp.show()
+        if nX < MAX_nX:
+            lp.show()
+        else:
+            filename = os.path.join(os.getcwd(),'{0}.lp'.format(g_cyclic))
+            lp.write_lp(filename)
+            print 'Linear program saved to {0}'.format(filename)
     # end if verbose
 
     # solve
