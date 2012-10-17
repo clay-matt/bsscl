@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 121016
+# version 121017
 
 ################################
 
@@ -47,7 +47,8 @@ def scl(g,m,l,verbose = False):
 
     # construct cycle list
     X = X_variable_list(Gamma_g,m,l)
-    Xi = range(0,len(X))
+    nX = len(X)
+    Xi = range(nX)
 
     if verbose:
         print 'X variables = {0}'.format(X)
@@ -65,7 +66,7 @@ def scl(g,m,l,verbose = False):
         lp.add_constraint(Sum((X[i].get(e,0) - X[i].get(e_bar,0))*x[i]
                               for i in Xi) == 0, name = 'Dual Edge {0}'.format(e))
     # normalizing so that 2n(S) = 2
-    lp.add_constraint(Sum(dict_nv(X[i],0)*x[i] for i in Xi) == 2,
+    lp.add_constraint(Sum(dict_nv(X[i],0)*x[i] for i in Xi) == 1,
                       name = 'Normalize n(s) = 1')
 
     if verbose:
@@ -78,12 +79,15 @@ def scl(g,m,l,verbose = False):
     if verbose:
         print 'Linear Programming Solution = {0}'.format(ndisks)
         x_value = lp.get_values(x)
-        for c in x_value.keys():
+        for c in x_value.keys(): # only print edge crossed by disks
             if x_value[c] != 0:
-                print '{0} : {1}'.format(x_value[c],X[c])
+                nonzero = {} 
+                for e in X[c].keys():
+                    if X[c].get(e) != 0: nonzero[e] = X[c].get(e)
+                print '{0} : {1}'.format(x_value[c],nonzero)
     # end if verbose
 
-    scl = (t_len(g_cyclic) - ndisks)/2
+    scl = (t_len(g_cyclic)/2 - ndisks)/2
 
     if verbose:
         print 'scl({0}) = {1}'.format(g,scl)

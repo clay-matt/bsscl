@@ -34,7 +34,7 @@ def tighten(word):
     # returns the reduced word in the free group representing word
     t_word = ''
     w_len = len(word)
-    for i in range(_sage_const_0 ,w_len):
+    for i in range(w_len):
         if len(t_word) == _sage_const_0 :
             t_word += word[i]
         else:
@@ -178,7 +178,7 @@ def cycle_degree(c,turn_degree):
 
 def cycle_sum_degree(w,sdegrees):
     cs_degree = _sage_const_0 
-    for i in range(_sage_const_0 ,len(w)):
+    for i in range(len(w)):
         cs_degree += w[i]*sdegrees[i]
     return cs_degree
 
@@ -196,7 +196,7 @@ def cycle_type(c,turn_type):
 
 def cycle_sum_type(w,stypes):
     cs_type = -_sage_const_1  # type not set
-    for i in range(_sage_const_0 ,len(w)):
+    for i in range(len(w)):
         if w[i] != _sage_const_0 :
             if cs_type == -_sage_const_1 : # type not set
                 cs_type = stypes[i]
@@ -239,7 +239,7 @@ def X_variable_list(Gamma_g,m,l):
                     edge_set=[]
                     for e in C.edges(labels=False):
                         ne = _sage_const_0 
-                        for i in range(_sage_const_0 ,nc):
+                        for i in range(nc):
                             ne += w[i]*path_ne(scycles[i],e) 
                         c_dict[e] = ne # number of times e appears in cycle sum
                         if ne != _sage_const_0 : edge_set.append(e)
