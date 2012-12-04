@@ -217,7 +217,7 @@ def mod_value(c_type,m,l):
 
 ################################
 
-def X_variable_list(Gamma_g,m,l):
+def X_variable_list(Gamma_g,m,l,MM):
     M = max(abs(m),abs(l))
     X = []
     for C in Gamma_g.graph.strongly_connected_components_subgraphs(): # loop over components of turn graph Gamma_g
@@ -228,7 +228,7 @@ def X_variable_list(Gamma_g,m,l):
         for c in scycles: # record cycle degrees and types
             sdegrees.append(cycle_degree(c,Gamma_g.turn_degree))
             stypes.append(cycle_type(c,Gamma_g.turn_type))
-        for n in range(_sage_const_1 ,M+_sage_const_1 ): # construct sums of n embedded cycles
+        for n in range(_sage_const_1 ,MM+_sage_const_1 ): # construct sums of n embedded cycles
             Weights = list(IntegerVectors(n,nc)) # integer vectors w/ nc components that sum to n
             for w in Weights:
                 c_degree = cycle_sum_degree(w,sdegrees)

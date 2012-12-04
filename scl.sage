@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 121018
+# version 121026
 
 ################################
 
@@ -14,7 +14,7 @@ def scl(g,m,l,verbose = False):
     # compute the scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
 
-    MAX_nX = 100 # cap on number of variable to be displayed on screen
+    MAX_nX = 100 # cap on number of variables to be displayed on screen
 
     if t_exp(g) != 0:
         print 'scl({0}) is not defined as |{1}|_t != 0'.format(g,g)
@@ -48,7 +48,7 @@ def scl(g,m,l,verbose = False):
     # end if verbose
 
     # construct cycle list
-    X = X_variable_list(Gamma_g,m,l)
+    X = X_variable_list(Gamma_g,m,l,2)
     nX = len(X)
     Xi = range(nX)
 
@@ -58,7 +58,7 @@ def scl(g,m,l,verbose = False):
             print 'X variables = {0}'.format(X)
         filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
         save(X,filename)
-        print 'X has been saved to {0}'.format(filename)
+        print 'X variables saved to {0}'.format(filename)
     # end if verbose
         
     # set up linear programming

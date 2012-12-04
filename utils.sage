@@ -215,7 +215,7 @@ def mod_value(c_type,m,l):
 
 ################################
 
-def X_variable_list(Gamma_g,m,l):
+def X_variable_list(Gamma_g,m,l,MM):
     M = max(abs(m),abs(l))
     X = []
     for C in Gamma_g.graph.strongly_connected_components_subgraphs(): # loop over components of turn graph Gamma_g

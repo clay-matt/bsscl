@@ -60,7 +60,7 @@ def scl(g,m,l,verbose = False):
             print 'X variables = {0}'.format(X)
         filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
         save(X,filename)
-        print 'X has been saved to {0}'.format(filename)
+        print 'X variables saved to {0}'.format(filename)
     # end if verbose
         
     # set up linear programming
