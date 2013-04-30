@@ -3,12 +3,11 @@ from sage.all_cmdline import *   # import sage library
 _sage_const_100 = Integer(100); _sage_const_2 = Integer(2); _sage_const_1 = Integer(1); _sage_const_0 = Integer(0)################################
 
 # Matt Clay
-# version 121018
+# version 130430
 
 ################################
 
 from utils import *
-from sage.numerical.mip import Sum
 
 ################################
 
@@ -16,7 +15,7 @@ def scl(g,m,l,verbose = False):
     # compute the scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
 
-    MAX_nX = _sage_const_100  # cap on number of variable to be displayed on screen
+    MAX_nX = _sage_const_100  # cap on number of variables to be displayed on screen
 
     if t_exp(g) != _sage_const_0 :
         print 'scl({0}) is not defined as |{1}|_t != 0'.format(g,g)
@@ -68,14 +67,14 @@ def scl(g,m,l,verbose = False):
     lp.set_problem_name('Stable Commutator Length for {0}'.format(g))
     x = lp.new_variable()
     # set objective function
-    lp.set_objective(Sum(x[i] for i in Xi))
+    lp.set_objective(lp.sum(x[i] for i in Xi))
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
-        lp.add_constraint(Sum((X[i].get(e,_sage_const_0 ) - X[i].get(e_bar,_sage_const_0 ))*x[i]
+        lp.add_constraint(lp.sum((X[i].get(e,_sage_const_0 ) - X[i].get(e_bar,_sage_const_0 ))*x[i]
                               for i in Xi) == _sage_const_0 , name = 'Dual Edge {0}'.format(e))
     # normalizing so that 2n(S) = 2
-    lp.add_constraint(Sum(dict_nv(X[i],_sage_const_0 )*x[i] for i in Xi) == _sage_const_1 ,
+    lp.add_constraint(lp.sum(dict_nv(X[i],_sage_const_0 )*x[i] for i in Xi) == _sage_const_1 ,
                       name = 'Normalize n(s) = 1')
 
     if verbose:

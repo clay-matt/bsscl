@@ -3,7 +3,7 @@ from sage.all_cmdline import *   # import sage library
 _sage_const_2 = Integer(2); _sage_const_1 = Integer(1); _sage_const_0 = Integer(0)################################
 
 # Matt Clay
-# version 121016
+# version 130430
 
 ################################
 
@@ -70,7 +70,7 @@ def normal_form(g,m,l):
     # returns the normal form of g in BS(m,l)
     # the normal form is:
     # a^i1 t^e1 a^i2 t^e2 ... a^ik t^ek a^l
-    # where |i| < l if e = 1 and |i| < m if e = 1
+    # where |i| < l if e = 1 and |i| < m if e = -1
     g_tight = tighten(g)
     a_sub = re.split('[t]+',g_tight,flags=re.IGNORECASE) # a subwords
     t_sub = re.split('[a]+',g_tight,flags=re.IGNORECASE) # t subwords
@@ -217,7 +217,7 @@ def mod_value(c_type,m,l):
 
 ################################
 
-def X_variable_list(Gamma_g,m,l,MM):
+def X_variable_list(Gamma_g,m,l):
     M = max(abs(m),abs(l))
     X = []
     for C in Gamma_g.graph.strongly_connected_components_subgraphs(): # loop over components of turn graph Gamma_g
@@ -228,7 +228,7 @@ def X_variable_list(Gamma_g,m,l,MM):
         for c in scycles: # record cycle degrees and types
             sdegrees.append(cycle_degree(c,Gamma_g.turn_degree))
             stypes.append(cycle_type(c,Gamma_g.turn_type))
-        for n in range(_sage_const_1 ,MM+_sage_const_1 ): # construct sums of n embedded cycles
+        for n in range(_sage_const_1 ,M+_sage_const_1 ): # construct sums of n embedded cycles
             Weights = list(IntegerVectors(n,nc)) # integer vectors w/ nc components that sum to n
             for w in Weights:
                 c_degree = cycle_sum_degree(w,sdegrees)

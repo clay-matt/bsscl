@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 121016
+# version 130430
 
 ################################
 
@@ -68,7 +68,7 @@ def normal_form(g,m,l):
     # returns the normal form of g in BS(m,l)
     # the normal form is:
     # a^i1 t^e1 a^i2 t^e2 ... a^ik t^ek a^l
-    # where |i| < l if e = 1 and |i| < m if e = 1
+    # where |i| < l if e = 1 and |i| < m if e = -1
     g_tight = tighten(g)
     a_sub = re.split('[t]+',g_tight,flags=re.IGNORECASE) # a subwords
     t_sub = re.split('[a]+',g_tight,flags=re.IGNORECASE) # t subwords
@@ -215,7 +215,7 @@ def mod_value(c_type,m,l):
 
 ################################
 
-def X_variable_list(Gamma_g,m,l,MM):
+def X_variable_list(Gamma_g,m,l):
     M = max(abs(m),abs(l))
     X = []
     for C in Gamma_g.graph.strongly_connected_components_subgraphs(): # loop over components of turn graph Gamma_g

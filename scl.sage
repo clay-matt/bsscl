@@ -1,12 +1,11 @@
 ################################
 
 # Matt Clay
-# version 121026
+# version 130430
 
 ################################
 
 from utils import *
-from sage.numerical.mip import Sum
 
 ################################
 
@@ -48,7 +47,7 @@ def scl(g,m,l,verbose = False):
     # end if verbose
 
     # construct cycle list
-    X = X_variable_list(Gamma_g,m,l,2)
+    X = X_variable_list(Gamma_g,m,l)
     nX = len(X)
     Xi = range(nX)
 
@@ -66,15 +65,15 @@ def scl(g,m,l,verbose = False):
     lp.set_problem_name('Stable Commutator Length for {0}'.format(g))
     x = lp.new_variable()
     # set objective function
-    lp.set_objective(Sum(x[i] for i in Xi))
+    lp.set_objective(lp.sum(x[i] for i in Xi))
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
-        lp.add_constraint(Sum((X[i].get(e,0) - X[i].get(e_bar,0))*x[i]
+        lp.add_constraint(lp.sum((X[i].get(e,0) - X[i].get(e_bar,0))*x[i]
                               for i in Xi) == 0, name = 'Dual Edge {0}'.format(e))
-    # normalizing so that 2n(S) = 2
-    lp.add_constraint(Sum(dict_nv(X[i],0)*x[i] for i in Xi) == 1,
-                      name = 'Normalize n(s) = 1')
+    # normalizing so that n(S) = 1
+    lp.add_constraint(lp.sum(dict_nv(X[i],0)*x[i] for i in Xi) == 1,
+                      name = 'Normalize n(S) = 1')
 
     if verbose:
         if nX < MAX_nX:
