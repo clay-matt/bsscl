@@ -48,10 +48,10 @@ Variables:
   x_0 is a continuous variable (min=0.0, max=+oo)
   x_1 is a continuous variable (min=0.0, max=+oo)
   x_2 is a continuous variable (min=0.0, max=+oo)
-Linear Programming Solution = 1.4
+Linear Programming Solution = 0.7
 0.4 : {(0, 0): 5}
 1.0 : {(1, 1): 2}
-scl(atAT) = 0.3
+scl(atAT) = 0.15
 
 ********
 
@@ -61,9 +61,9 @@ Note: the output gets very big very quickly, consider redirecting output to a fi
 
 Enter Sage and load the file scl.sage via: 
 
-load "scl.sage"
+%runfile('scl.sage')
 
-To comute scl(g) enter:
+To compute scl(g) enter:
 
 scl(g,m,l,v)
 
@@ -71,13 +71,17 @@ where:
       g is a string in a,A,t,T representing the element	
       m integer
       l integer
-      v verbosity, either True or False 
+      v verbosity, either True or False (default value is False) 
 
 Example:
 
 scl('ataT',2,5,True)
 
 The output is the same as above.
+
+scl('ataT',2,5)
+
+Returns 0.15
 
 #############################
 

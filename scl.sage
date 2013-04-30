@@ -52,7 +52,7 @@ def scl(g,m,l,verbose = False):
     Xi = range(nX)
 
     if verbose:
-        print 'There are {0} variables'.format(nX)
+        print 'There are {0} variables.'.format(nX)
         if nX < MAX_nX:
             print 'X variables = {0}'.format(X)
         filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
