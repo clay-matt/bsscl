@@ -49,12 +49,12 @@ def scl(g,m,l,verbose = False):
     # end if verbose
 
     # construct cycle list
-    X = X_variable_list(Gamma_g,m,l)
+    X,nonmixedX = X_variable_list(Gamma_g,m,l)
     nX = len(X)
     Xi = range(nX)
 
     if verbose:
-        print 'There are {0} variables'.format(nX)
+        print 'There are {0} variables.'.format(nX)
         if nX < MAX_nX:
             print 'X variables = {0}'.format(X)
         filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
@@ -67,15 +67,15 @@ def scl(g,m,l,verbose = False):
     lp.set_problem_name('Stable Commutator Length for {0}'.format(g))
     x = lp.new_variable()
     # set objective function
-    lp.set_objective(lp.sum(x[i] for i in Xi))
+    lp.set_objective(lp.sum(x[i] for i in nonmixedX))
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
         lp.add_constraint(lp.sum((X[i].get(e,_sage_const_0 ) - X[i].get(e_bar,_sage_const_0 ))*x[i]
                               for i in Xi) == _sage_const_0 , name = 'Dual Edge {0}'.format(e))
-    # normalizing so that 2n(S) = 2
+    # normalizing so that n(S) = 1
     lp.add_constraint(lp.sum(dict_nv(X[i],_sage_const_0 )*x[i] for i in Xi) == _sage_const_1 ,
-                      name = 'Normalize n(s) = 1')
+                      name = 'Normalize n(S) = 1')
 
     if verbose:
         if nX < MAX_nX:

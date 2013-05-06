@@ -3,7 +3,7 @@ from sage.all_cmdline import *   # import sage library
 _sage_const_2 = Integer(2); _sage_const_1 = Integer(1); _sage_const_0 = Integer(0)################################
 
 # Matt Clay
-# version 130430
+# version 130507
 
 ################################
 
@@ -186,9 +186,9 @@ def cycle_sum_degree(w,sdegrees):
 
 def cycle_type(c,turn_type):
     # return the type of the cycle
-    c_type = turn_type[c[_sage_const_0 ]]
+    c_type = turn_type[c[_sage_const_0 ]] # type of first turn
     for v in c[_sage_const_1 :]:
-        if turn_type[v] != c_type:
+        if turn_type[v] != c_type: # found a different turn => mixed
             return _sage_const_0 
     return c_type
 
@@ -207,11 +207,11 @@ def cycle_sum_type(w,stypes):
 ################################
 
 def mod_value(c_type,m,l):
-    if c_type == _sage_const_0 :
+    if c_type == _sage_const_0 : # mixed type
         return gcd(m,l)
-    if c_type == _sage_const_1 :
+    if c_type == _sage_const_1 : # type m
         return m
-    if c_type == _sage_const_2 :
+    if c_type == _sage_const_2 : # type l
         return l
     return -_sage_const_1  # ERROR CATCH
 
@@ -219,7 +219,9 @@ def mod_value(c_type,m,l):
 
 def X_variable_list(Gamma_g,m,l):
     M = max(abs(m),abs(l))
-    X = []
+    X = [] # array of variables: cycles in turn graph
+    nonmixedX = [] # indices of non-mixed cycles
+    nX = _sage_const_0  # current index of variable
     for C in Gamma_g.graph.strongly_connected_components_subgraphs(): # loop over components of turn graph Gamma_g
         scycles = C.all_simple_cycles() # embedded cycles
         nc = len(scycles)
@@ -249,8 +251,11 @@ def X_variable_list(Gamma_g,m,l):
                             c_subgraph.delete_vertex(v)
                     if c_subgraph.is_connected(): # the sum is an honest cycle
                         X.append(c_dict)
+                        if c_type != _sage_const_0 : # non-mixed type cycle
+                            nonmixedX.append(nX)
+                        nX += _sage_const_1 
     # end loop over C in Gamma_g.graph....
-    return X
+    return X,nonmixedX
 
 ################################
 

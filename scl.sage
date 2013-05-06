@@ -40,14 +40,14 @@ def scl(g,m,l,verbose = False):
         print 'Plotting turn graph...'
         p = Gamma_g.graph.plot(graph_border=True,layout='circular')
         p.show()
-        filename = os.path.join(os.getcwd(),'{0}.png'.format(g_cyclic))
+        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.png'.format(g_cyclic,m,l))
         save(p,filename)
         print 'Turn graph saved to {0}'.format(filename)
         print 'Setting up the linear programming problem...'
     # end if verbose
 
     # construct cycle list
-    X = X_variable_list(Gamma_g,m,l)
+    X,nonmixedX = X_variable_list(Gamma_g,m,l)
     nX = len(X)
     Xi = range(nX)
 
@@ -55,17 +55,18 @@ def scl(g,m,l,verbose = False):
         print 'There are {0} variables.'.format(nX)
         if nX < MAX_nX:
             print 'X variables = {0}'.format(X)
-        filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
+        filename = os.path.join(os.getcwd(),'x_{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
         save(X,filename)
         print 'X variables saved to {0}'.format(filename)
     # end if verbose
         
     # set up linear programming
     lp = MixedIntegerLinearProgram(solver = 'GLPK')
-    lp.set_problem_name('Stable Commutator Length for {0}'.format(g))
+    lp.set_problem_name('Stable Commutator Length for {0} in BS({1},{2})'.format(g,m,l))
     x = lp.new_variable()
     # set objective function
-    lp.set_objective(lp.sum(x[i] for i in Xi))
+    # lp.set_objective(lp.sum(x[i] for i in Xi)) # maximize all potential disks
+    lp.set_objective(lp.sum(x[i] for i in nonmixedX)) # maximize only non-mixed potential disks
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
@@ -78,7 +79,7 @@ def scl(g,m,l,verbose = False):
     if verbose:
         if nX < MAX_nX:
             lp.show()
-        filename = os.path.join(os.getcwd(),'{0}.sobj'.format(g_cyclic))
+        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
         save(lp,filename)
         print 'Linear program saved to {0}'.format(filename)
     # end if verbose
