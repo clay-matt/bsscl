@@ -2,7 +2,7 @@
  
 Stable Commutator Length in BS(m,l)
 
-Description: Sage/Python scripts to compute stable commutator length in the 
+Description: Sage/Python scripts to compute lower and upper bounds on the stable commutator length in the 
 Baumslag-Solitar group BS(m,l):
 
 BS(m,l) = < a,t | t a^m T = a^l >
@@ -15,73 +15,80 @@ Two ways to compute scl(g):
 
 In the directory containing the files enter:
 
-sage main.sage g m l v
+sage bsscl.sage [-h] [-b B] [-v] g m l
 
-where:
+positional arguments:
 	g is a string in a,A,t,T representing the element
 	m integer
 	l integer
-	v is the verbosity flag, anything here will toggle verbosity
+
+optional arguments:
+	 -h, --help       show this help message and exit
+	 -b B, --bound B  bound toggle: 0 = lower bound (default), 1 = upper bound
+ 	 -v, --verbose    increase output verbosity
 
 Example:
 
-sage main.sage 'ataT' 2 5 v
+sage bsscl.sage ataT 2 5 -b 0 -v
 
 The output of this command is:
 
 ********
 
+ataT
 m,l = 2,5
-g = atAT
-Turn Degrees: [1, -1]
+g = ataT
+Turn Degrees: [1, 1]
 Turn Types: [2, 1]
 Plotting turn graph...
-Turn graph saved to /Users/mclay/Programs/Sage/SCLGBS/ataT.png
+Turn graph saved to /Users/mclay/Programs/Sage/SCLGBS/ataT_2_5.png
 Setting up the linear programming problem...
+There are 3 variables.
 X variables = [{(0, 0): 5}, {(1, 1): 2}, {(1, 1): 4}]
+X variables saved to /Users/mclay/Programs/Sage/SCLGBS/x_ataT_2_5.sobj
 Maximization:
-  x_0 +x_1 +x_2
+  x_0 + x_1 + x_2
 Constraints:
-  Dual Edge (0, 0): 0.0 <= 5.0 x_0 -2.0 x_1 -4.0 x_2 <= 0.0
-  Normalize n(s) = 1: 2.0 <= 5.0 x_0 <= 2.0
+  Dual Edge (0, 0): 0.0 <= 5.0 x_0 - 2.0 x_1 - 4.0 x_2 <= 0.0
+  Normalize n(S) = 1: 1.0 <= 5.0 x_0 <= 1.0
 Variables:
   x_0 is a continuous variable (min=0.0, max=+oo)
   x_1 is a continuous variable (min=0.0, max=+oo)
   x_2 is a continuous variable (min=0.0, max=+oo)
+Linear program saved to /Users/mclay/Programs/Sage/SCLGBS/ataT_2_5.sobj
 Linear Programming Solution = 0.7
-0.4 : {(0, 0): 5}
-1.0 : {(1, 1): 2}
-scl(atAT) = 0.15
+0.2 : {(0, 0): 5}
+0.5 : {(1, 1): 2}
+lower scl(ataT) = 0.15
 
 ********
 
 Note: the output gets very big very quickly, consider redirecting output to a file.
 
-** In a Sage sesstion **
+** In a Sage session **
 
 Enter Sage and load the file scl.sage via: 
 
 %runfile('scl.sage')
 
-To compute scl(g) enter:
+To compute lower bound on scl(g) enter:
 
-scl(g,m,l,v)
+scl(g,m,l,b,v)
 
 where:
       g is a string in a,A,t,T representing the element	
       m integer
       l integer
+      b bound toggle, either 0 for lower bound or 1 for upper bound (default value is 0)
       v verbosity, either True or False (default value is False) 
 
-Example:
+Examples:
 
-scl('ataT',2,5,True)
-
+sage: scl('ataT',2,5,0,True)
 The output is the same as above.
 
-scl('ataT',2,5)
-
-Returns 0.15
+sage: scl('ataT',2,5)
+0.15000000000000002
 
 #############################
 

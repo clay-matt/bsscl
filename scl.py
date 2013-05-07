@@ -3,7 +3,7 @@ from sage.all_cmdline import *   # import sage library
 _sage_const_100 = Integer(100); _sage_const_2 = Integer(2); _sage_const_1 = Integer(1); _sage_const_0 = Integer(0)################################
 
 # Matt Clay
-# version 130430
+# version 130507
 
 ################################
 
@@ -11,9 +11,12 @@ from utils import *
 
 ################################
 
-def scl(g,m,l,verbose = False):
-    # compute the scl of g where g is an element in
+def scl(g,m,l,bound = _sage_const_0 ,verbose = False):
+    # compute bounds on scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
+
+    # bound == 0: lower bound - maximize over all potential disks
+    # bound != 0: lower bound - maximize over all non-mixed potential disks
 
     MAX_nX = _sage_const_100  # cap on number of variables to be displayed on screen
 
@@ -42,7 +45,7 @@ def scl(g,m,l,verbose = False):
         print 'Plotting turn graph...'
         p = Gamma_g.graph.plot(graph_border=True,layout='circular')
         p.show()
-        filename = os.path.join(os.getcwd(),'{0}.png'.format(g_cyclic))
+        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.png'.format(g_cyclic,m,l))
         save(p,filename)
         print 'Turn graph saved to {0}'.format(filename)
         print 'Setting up the linear programming problem...'
@@ -57,17 +60,20 @@ def scl(g,m,l,verbose = False):
         print 'There are {0} variables.'.format(nX)
         if nX < MAX_nX:
             print 'X variables = {0}'.format(X)
-        filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_cyclic))
+        filename = os.path.join(os.getcwd(),'x_{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
         save(X,filename)
         print 'X variables saved to {0}'.format(filename)
     # end if verbose
         
     # set up linear programming
     lp = MixedIntegerLinearProgram(solver = 'GLPK')
-    lp.set_problem_name('Stable Commutator Length for {0}'.format(g))
+    lp.set_problem_name('Stable Commutator Length for {0} in BS({1},{2})'.format(g,m,l))
     x = lp.new_variable()
     # set objective function
-    lp.set_objective(lp.sum(x[i] for i in nonmixedX))
+    if bound == _sage_const_0 : 
+        lp.set_objective(lp.sum(x[i] for i in Xi)) # maximize all potential disks
+    else:
+        lp.set_objective(lp.sum(x[i] for i in nonmixedX)) # maximize only non-mixed potential disks
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
@@ -80,7 +86,7 @@ def scl(g,m,l,verbose = False):
     if verbose:
         if nX < MAX_nX:
             lp.show()
-        filename = os.path.join(os.getcwd(),'{0}.sobj'.format(g_cyclic))
+        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
         save(lp,filename)
         print 'Linear program saved to {0}'.format(filename)
     # end if verbose
@@ -102,7 +108,8 @@ def scl(g,m,l,verbose = False):
     scl = (t_len(g_cyclic)/_sage_const_2  - ndisks)/_sage_const_2 
 
     if verbose:
-        print 'scl({0}) = {1}'.format(g,scl)
+        lu = 'lower' if bound == _sage_const_0  else 'upper'
+        print '{0} scl({1}) = {2}'.format(lu,g,scl)
         return
     # end if verbose
     

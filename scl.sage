@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 130430
+# version 130507
 
 ################################
 
@@ -9,9 +9,12 @@ from utils import *
 
 ################################
 
-def scl(g,m,l,verbose = False):
-    # compute the scl of g where g is an element in
+def scl(g,m,l,bound = 0,verbose = False):
+    # compute bounds on scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
+
+    # bound == 0: lower bound - maximize over all potential disks
+    # bound != 0: lower bound - maximize over all non-mixed potential disks
 
     MAX_nX = 100 # cap on number of variables to be displayed on screen
 
@@ -65,8 +68,10 @@ def scl(g,m,l,verbose = False):
     lp.set_problem_name('Stable Commutator Length for {0} in BS({1},{2})'.format(g,m,l))
     x = lp.new_variable()
     # set objective function
-    # lp.set_objective(lp.sum(x[i] for i in Xi)) # maximize all potential disks
-    lp.set_objective(lp.sum(x[i] for i in nonmixedX)) # maximize only non-mixed potential disks
+    if bound == 0: 
+        lp.set_objective(lp.sum(x[i] for i in Xi)) # maximize all potential disks
+    else:
+        lp.set_objective(lp.sum(x[i] for i in nonmixedX)) # maximize only non-mixed potential disks
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
@@ -101,7 +106,8 @@ def scl(g,m,l,verbose = False):
     scl = (t_len(g_cyclic)/2 - ndisks)/2
 
     if verbose:
-        print 'scl({0}) = {1}'.format(g,scl)
+        lu = 'lower' if bound == 0 else 'upper'
+        print '{0} scl({1}) = {2}'.format(lu,g,scl)
         return
     # end if verbose
     
