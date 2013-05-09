@@ -274,16 +274,6 @@ def path_ne(p,e):
 
 ################################
 
-#OBSOLETE?
-def path_nv(p,v):
-    # counts how many times the vertex v appears in the path p
-    # if p is a cycle, we do not count the initial and terminal vertex twice
-    if v == p[_sage_const_0 ] and p[_sage_const_0 ] == p[-_sage_const_1 ]:
-        return p.count(v)-_sage_const_1 
-    return p.count(v)
-    
-################################
-
 def dict_nv(e_dict,v):
     # counts how many times the vertex v appears in the edge dictionary
     nv = _sage_const_0 

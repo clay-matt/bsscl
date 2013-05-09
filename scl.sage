@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 130507
+# version 130509
 
 ################################
 
@@ -57,10 +57,16 @@ def scl(g,m,l,bound = 0,verbose = False):
     if verbose:
         print 'There are {0} variables.'.format(nX)
         if nX < MAX_nX:
-            print 'X variables = {0}'.format(X)
+            for i in Xi: # only show non-zero edges
+                x = X[i]
+                non_zerox = {}
+                for e in x.keys():
+                    if x[e] != 0:
+                        non_zerox[e] = x[e]
+                print 'x_{0}: {1}'.format(i,non_zerox)
         filename = os.path.join(os.getcwd(),'x_{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
         save(X,filename)
-        print 'X variables saved to {0}'.format(filename)
+        print 'Variables saved to {0}'.format(filename)
     # end if verbose
         
     # set up linear programming
@@ -103,7 +109,7 @@ def scl(g,m,l,bound = 0,verbose = False):
                 print '{0} : {1}'.format(x_value[c],nonzero)
     # end if verbose
 
-    scl = (t_len(g_cyclic)/2 - ndisks)/2
+    scl = t_len(g_cyclic)/4 - ndisks/2
 
     if verbose:
         lu = 'lower' if bound == 0 else 'upper'
