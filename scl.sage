@@ -1,7 +1,7 @@
 ################################
 
 # Matt Clay
-# version 130509
+# version 130710
 
 ################################
 
@@ -9,12 +9,9 @@ from utils import *
 
 ################################
 
-def scl(g,m,l,bound = 0,verbose = False):
-    # compute bounds on scl of g where g is an element in
+def scl(g,m,l,verbose = False):
+    # compute lower bound on scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
-
-    # bound == 0: lower bound - maximize over all potential disks
-    # bound != 0: lower bound - maximize over all non-mixed potential disks
 
     MAX_nX = 100 # cap on number of variables to be displayed on screen
 
@@ -31,6 +28,13 @@ def scl(g,m,l,bound = 0,verbose = False):
         print 'g = {0}'.format(g_cyclic)
     # end if verbose
 
+    if t_len(g) == 0:
+        if verbose:
+            print 'lower scl({0}) = 0.0'.format(g)
+            return
+        # end if verbose
+        return 0.0
+    
     # build turn graph
     Gamma_g = turn_graph(g_cyclic)
     nv = Gamma_g.graph.order()
@@ -50,10 +54,10 @@ def scl(g,m,l,bound = 0,verbose = False):
     # end if verbose
 
     # construct cycle list
-    X,nonmixedX = X_variable_list(Gamma_g,m,l)
+    X = X_variable_list(Gamma_g,m,l)
     nX = len(X)
     Xi = range(nX)
-
+    
     if verbose:
         print 'There are {0} variables.'.format(nX)
         if nX < MAX_nX:
@@ -73,11 +77,7 @@ def scl(g,m,l,bound = 0,verbose = False):
     lp = MixedIntegerLinearProgram(solver = 'GLPK')
     lp.set_problem_name('Stable Commutator Length for {0} in BS({1},{2})'.format(g,m,l))
     x = lp.new_variable()
-    # set objective function
-    if bound == 0: 
-        lp.set_objective(lp.sum(x[i] for i in Xi)) # maximize all potential disks
-    else:
-        lp.set_objective(lp.sum(x[i] for i in nonmixedX)) # maximize only non-mixed potential disks
+    lp.set_objective(lp.sum(x[i] for i in Xi)) # maximize all potential disks
     # edge duality contraints
     for e in E:
         e_bar = dual_edge(e,nv)
@@ -112,8 +112,7 @@ def scl(g,m,l,bound = 0,verbose = False):
     scl = t_len(g_cyclic)/4 - ndisks/2
 
     if verbose:
-        lu = 'lower' if bound == 0 else 'upper'
-        print '{0} scl({1}) = {2}'.format(lu,g,scl)
+        print 'lower scl({0}) = {1}'.format(g,scl)
         return
     # end if verbose
     

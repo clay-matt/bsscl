@@ -3,7 +3,7 @@ from sage.all_cmdline import *   # import sage library
 _sage_const_2 = Integer(2); _sage_const_1 = Integer(1); _sage_const_0 = Integer(0)################################
 
 # Matt Clay
-# version 130507
+# version 130710
 
 ################################
 
@@ -220,8 +220,6 @@ def mod_value(c_type,m,l):
 def X_variable_list(Gamma_g,m,l):
     M = max(abs(m),abs(l))
     X = [] # array of variables: cycles in turn graph
-    nonmixedX = [] # indices of non-mixed cycles
-    nX = _sage_const_0  # current index of variable
     for C in Gamma_g.graph.strongly_connected_components_subgraphs(): # loop over components of turn graph Gamma_g
         scycles = C.all_simple_cycles() # embedded cycles
         nc = len(scycles)
@@ -251,11 +249,10 @@ def X_variable_list(Gamma_g,m,l):
                             c_subgraph.delete_vertex(v)
                     if c_subgraph.is_connected(): # the sum is an honest cycle
                         X.append(c_dict)
-                        if c_type != _sage_const_0 : # non-mixed type cycle
-                            nonmixedX.append(nX)
-                        nX += _sage_const_1 
+
     # end loop over C in Gamma_g.graph....
-    return X,nonmixedX
+    
+    return X
 
 ################################
 
