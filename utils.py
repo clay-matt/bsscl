@@ -107,7 +107,7 @@ def normal_form(g,m,l):
             while i < block_len:
                 g_term += a_sub[i] + t_sub[i + t_shift]
                 i+=1
-            g_normal = g_init + normal_form(g_term,m,l)
+            g_normal = normal_form(g_init + g_term,m,l)
     return tighten(g_normal)
 
 ################################
