@@ -2,8 +2,8 @@
  
 Stable Commutator Length in BS(m,l)
 
-Description: Sage/Python scripts to compute lower and upper bounds on the stable commutator length in the 
-Baumslag-Solitar group BS(m,l):
+Description: Sage/Python scripts to compute lower bound on the stable
+commutator length in the Baumslag-Solitar group BS(m,l):
 
 BS(m,l) = < a,t | t a^m T = a^l >
 
@@ -15,7 +15,7 @@ Two ways to compute scl(g):
 
 In the directory containing the files enter:
 
-sage bsscl.sage [-h] [-b B] [-v] g m l
+sage bsscl.py [-h] [-v[v]] g m l
 
 positional arguments:
 	g is a string in a,A,t,T representing the element
@@ -24,18 +24,22 @@ positional arguments:
 
 optional arguments:
 	 -h, --help       show this help message and exit
-	 -b B, --bound B  bound toggle: 0 = lower bound (default), 1 = upper bound
  	 -v, --verbose    increase output verbosity
+
+Verboisty Levels:
+-v: shows current process, where files are saved and linear program
+solution
+-vv: additionally opens turn graph file and shows variables and linear
+program if number of variables is less than 100
 
 Example:
 
-sage bsscl.sage ataT 2 5 -b 0 -v
+sage bsscl.py ataT 2 5 -v
 
 The output of this command is:
 
 ********
 
-ataT
 m,l = 2,5
 g = ataT
 Turn Degrees: [1, 1]
@@ -44,17 +48,7 @@ Plotting turn graph...
 Turn graph saved to /Users/mclay/Programs/Sage/SCLGBS/ataT_2_5.png
 Setting up the linear programming problem...
 There are 3 variables.
-X variables = [{(0, 0): 5}, {(1, 1): 2}, {(1, 1): 4}]
-X variables saved to /Users/mclay/Programs/Sage/SCLGBS/x_ataT_2_5.sobj
-Maximization:
-  x_0 + x_1 + x_2
-Constraints:
-  Dual Edge (0, 0): 0.0 <= 5.0 x_0 - 2.0 x_1 - 4.0 x_2 <= 0.0
-  Normalize n(S) = 1: 1.0 <= 5.0 x_0 <= 1.0
-Variables:
-  x_0 is a continuous variable (min=0.0, max=+oo)
-  x_1 is a continuous variable (min=0.0, max=+oo)
-  x_2 is a continuous variable (min=0.0, max=+oo)
+Variables saved to /Users/mclay/Programs/Sage/SCLGBS/x_ataT_2_5.sobj
 Linear program saved to /Users/mclay/Programs/Sage/SCLGBS/ataT_2_5.sobj
 Linear Programming Solution = 0.7
 0.2 : {(0, 0): 5}
@@ -67,24 +61,23 @@ Note: the output gets very big very quickly, consider redirecting output to a fi
 
 ** In a Sage session **
 
-Enter Sage and load the file scl.sage via: 
+Enter Sage and load the file scl.py via: 
 
-%runfile('scl.sage')
+%attach 'scl.py'
 
 To compute lower bound on scl(g) enter:
 
-scl(g,m,l,b,v)
+scl(g,m,l,v)
 
 where:
       g is a string in a,A,t,T representing the element	
       m integer
       l integer
-      b bound toggle, either 0 for lower bound or 1 for upper bound (default value is 0)
-      v verbosity, either True or False (default value is False) 
+      v verbosity, (default value is 0) 
 
 Examples:
 
-sage: scl('ataT',2,5,0,True)
+sage: scl('ataT',2,5,1)
 The output is the same as above.
 
 sage: scl('ataT',2,5)
