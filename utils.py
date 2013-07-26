@@ -1,9 +1,9 @@
-################################
-
-# Matt Clay
-# version 130725
-
-################################
+#*****************************************************************************
+#       Copyright (C) 2013 Matt Clay <mattclay@uark.edu>
+# 
+#  Distributed under the terms of the GNU General Public License (GPL) 
+#                  http://www.gnu.org/licenses/ 
+#***************************************************************************** 
 
 # Definitions:
 
@@ -18,6 +18,7 @@
 
 from sage.graphs.digraph import *
 from sage.combinat.integer_vector import IntegerVectors
+from sage.rings.arith import gcd
 
 import re # regular expressions
     
@@ -31,15 +32,27 @@ class TurnGraph:
 
 ################################
 
+def t_exp(g):
+    # t exponent sum in g
+    return g.count('t') - g.count('T')
+
+################################
+
+def t_len(g):
+    # t length of g
+    return g.count('t') + g.count('T')
+
+################################
+
 def tighten(word):
     # returns the reduced word in the free group representing word
     t_word = ''
     w_len = len(word)
     for i in range(w_len):
-        if len(t_word) == 0:
-            t_word += word[i]
+        if t_word == '':
+            t_word = word[i]
         else:
-            if t_word[-1:] == word[i].swapcase():
+            if t_word[-1] == word[i].swapcase():
                 t_word = t_word[:-1]
             else:
                 t_word += word[i]
@@ -47,23 +60,43 @@ def tighten(word):
 
 ################################
 
-def cyclic(word):
-    # returns the cyclically reduced word in the free group conjugate to word
-    c_word = tighten(word)
-    while c_word[0] == c_word[-1:].swapcase():
-        c_word = c_word[:-1]
-        c_word = c_word[1:]
-    return c_word
+def inverse(word):
+    # returns the inverse word in the free group
+    return word[::-1].swapcase()
 
 ################################
 
-def t_exp(g):
-    return g.count('t') - g.count('T')
-
-################################
-
-def t_len(g):
-    return g.count('t') + g.count('T')
+def cyclic_normal(g,m,l):
+    # returns a cyclically reduced normal form representing the
+    # conjugacy class of g in BS(m,l)
+    g_cn = normal_form(g,m,l) # compute normal form
+    swap_sign = True if m*l < 0 else False
+    while g_cn[0] == g_cn[-1].swapcase(): # make the word cyclically reduced in the free group
+        g_cn = g_cn[1:-1]
+    while t_len(g_cn) > 0:
+        # move initial a's or A's to end and tighten
+        while g_cn[0] == 'a':
+            g_cn = g_cn[1:] + 'a'
+        while g_cn[0] == 'A':
+            g_cn = g_cn[1:] + 'A'
+        g_cn = tighten(g_cn)
+        g_term = re.search('t[a]*$',g_cn,flags=re.IGNORECASE).group(0)
+        if g_cn[0] == g_term[0]: return g_cn
+        if g_cn[0] == 't':
+            r,s = abs(l),abs(m)
+        else:
+            r,s = abs(m),abs(l)
+        a_len = len(g_term) - 1
+        if a_len % r == 0: # remove intial t and final Ta^{lq} block
+            g_cn = g_cn[1:-(a_len + 1)]
+            q = int(a_len/r)
+            if swap_sign:
+                moved_block = g_term[1].swapcase()*int(q*s)
+            else:
+                moved_block = g_term[1]*int(q*s)
+            g_cn = g_cn + moved_block
+        else: return g_cn
+    return g_cn
 
 ################################
 
@@ -99,7 +132,7 @@ def normal_form(g,m,l):
             g_normal = g_init
         else: # move some a's past the t
             q = int(a_len/r) # a_len = qr + c where 0 <= c < r
-            if swap_sign == True:
+            if swap_sign:
                 moved_block = a_block[0].swapcase()*int(q*s)
             else:
                 moved_block = a_block[0]*int(q*s)
@@ -110,6 +143,25 @@ def normal_form(g,m,l):
             g_normal = normal_form(g_init + g_term,m,l)
     return tighten(g_normal)
 
+################################
+
+def is_alternating(g):
+    # determines if g is alternating
+    # CAUTION: the program only determines if the given expression of
+    # g is alternating 
+    g_t = t_len(g) # t length of g
+    if g_t == 0: return True
+    t_sub = re.split('[a]+',g,flags=re.IGNORECASE) # t subwords
+    # remove possible trivial subwords
+    if t_sub[0] == '': t_sub = t_sub[1:]
+    if t_sub[-1] == '': t_sub = t_sub[:-1]
+    # determine if t only appear as +-1
+    if len(t_sub) != g_t: return False
+    # test for alternating signs
+    for i in range(1,g_t):
+        if t_sub[i-1] == t_sub[i]: return False
+    return True
+        
 ################################
 
 def turn_graph(g):

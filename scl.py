@@ -1,9 +1,9 @@
-################################
-
-# Matt Clay
-# version 130725
-
-################################
+#*****************************************************************************
+#       Copyright (C) 2013 Matt Clay <mattclay@uark.edu>
+# 
+#  Distributed under the terms of the GNU General Public License (GPL) 
+#                  http://www.gnu.org/licenses/ 
+#***************************************************************************** 
 
 from sage.all import *   # import sage library
 from utils import *
@@ -26,23 +26,26 @@ def scl(g,m,l,verbose = 0):
         return
 
     # put g into normal form and cyclically reduce
-    g_normal = normal_form(g,m,l)
-    g_cyclic = cyclic(g_normal)
+    g = cyclic_normal(g,m,l)
 
+    # determine if g is alternating
+    alt = is_alternating(g)
+    
     if verbose > 0:
         print 'm,l = {0},{1}'.format(m,l)
-        print 'g = {0}'.format(g_cyclic)
+        print 'g = {0}'.format(g)
+        if alt: print '{0} is alternating'.format(g)
     # end if verbose
 
     if t_len(g) == 0:
         if verbose > 0:
-            print 'lower scl({0}) = 0.0'.format(g)
+            print 'scl({0}) = 0.0'.format(g)
             return
         # end if verbose
         return 0.0
     
     # build turn graph
-    Gamma_g = turn_graph(g_cyclic)
+    Gamma_g = turn_graph(g)
     nv = Gamma_g.graph.order()
     E = dual_edge_basis(Gamma_g)
 
@@ -53,7 +56,7 @@ def scl(g,m,l,verbose = 0):
         print 'Plotting turn graph...'
         p = Gamma_g.graph.plot(graph_border=True,layout='circular')
         if verbose > 1: p.show()
-        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.png'.format(g_cyclic,m,l))
+        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.png'.format(g,m,l))
         save(p,filename)
         print 'Turn graph saved to {0}'.format(filename)
         print 'Setting up the linear programming problem...'
@@ -74,7 +77,7 @@ def scl(g,m,l,verbose = 0):
                     if x[e] != 0:
                         non_zerox[e] = x[e]
                 print 'x_{0}: {1}'.format(i,non_zerox)
-        filename = os.path.join(os.getcwd(),'x_{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
+        filename = os.path.join(os.getcwd(),'x_{0}_{1}_{2}.sobj'.format(g,m,l))
         save(X,filename)
         print 'Variables saved to {0}'.format(filename)
     # end if verbose
@@ -96,7 +99,7 @@ def scl(g,m,l,verbose = 0):
     if verbose > 0:
         if nX < MAX_nX and verbose > 1:
             lp.show()
-        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.sobj'.format(g_cyclic,m,l))
+        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.sobj'.format(g,m,l))
         save(lp,filename)
         print 'Linear program saved to {0}'.format(filename)
     # end if verbose
@@ -115,10 +118,11 @@ def scl(g,m,l,verbose = 0):
                 print '{0} : {1}'.format(x_value[c],nonzero)
     # end if verbose
 
-    scl = t_len(g_cyclic)/4.0 - ndisks/2
+    scl = t_len(g)/4.0 - ndisks/2
 
     if verbose > 0:
-        print 'lower scl({0}) = {1}'.format(g,scl)
+        scl_str = 'scl' if alt else 'lower scl'
+        print '{0}({1}) = {2}'.format(scl_str,g,scl)
         return
     # end if verbose
     
