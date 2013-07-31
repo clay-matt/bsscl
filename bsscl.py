@@ -5,6 +5,7 @@
 #                  http://www.gnu.org/licenses/ 
 #***************************************************************************** 
 
+from utils import *
 from scl import *
 import argparse # parse command line arguments
 
