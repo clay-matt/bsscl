@@ -7,6 +7,8 @@ commutator length in the Baumslag-Solitar group BS(m,l):
 
 BS(m,l) = < a,t | t a^m T = a^l >
 
+When the element is alternating, then the lower bound is scl.
+
 #############################
 
 Two ways to compute scl(g):
@@ -15,45 +17,53 @@ Two ways to compute scl(g):
 
 In the directory containing the files enter:
 
-sage bsscl.py [-h] [-v[v]] g m l
+./bsscl [-h] [-v[v]] g m l
 
 positional arguments:
-	g is a string in a,A,t,T representing the element
-	m integer
-	l integer
+  g                      string in a,A,t,T representing the element
+  m                     non-zero integer
+  l                       non-zero integer
 
 optional arguments:
-	 -h, --help       show this help message and exit
- 	 -v, --verbose    increase output verbosity
+  -h, --help       show this help message and exit
+  -v, --verbose  increase output verbosity
 
 Verboisty Levels:
 -v: shows current process, where files are saved and linear program
-solution
+    solution
 -vv: additionally opens turn graph file and shows variables and linear
-program if number of variables is less than 100
+     program if number of variables is less than 100
 
 Example:
 
-sage bsscl.py ataT 2 5 -v
-
-The output of this command is:
-
-********
-
+$ ./bsscl ataT 2 5 -vv
 m,l = 2,5
-g = ataT
+g = taTa
+taTa is alternating
 Turn Degrees: [1, 1]
 Turn Types: [2, 1]
 Plotting turn graph...
-Turn graph saved to /Users/mclay/Programs/Sage/SCLGBS/ataT_2_5.png
+Turn graph saved to /Users/mclay/Programs/bsscl/taTa_2_5.png
 Setting up the linear programming problem...
 There are 3 variables.
-Variables saved to /Users/mclay/Programs/Sage/SCLGBS/x_ataT_2_5.sobj
-Linear program saved to /Users/mclay/Programs/Sage/SCLGBS/ataT_2_5.sobj
+x_0: {(0, 0): 5}
+x_1: {(1, 1): 2}
+x_2: {(1, 1): 4}
+Variables saved to /Users/mclay/Programs/bsscl/x_taTa_2_5.sobj
+Maximization:
+  x_0 + x_1 + x_2
+Constraints:
+  Dual Edge (0, 0): 0.0 <= 5.0 x_0 - 2.0 x_1 - 4.0 x_2 <= 0.0
+  Normalize n(S) = 1: 1.0 <= 5.0 x_0 <= 1.0
+Variables:
+  x_0 is a continuous variable (min=0.0, max=+oo)
+  x_1 is a continuous variable (min=0.0, max=+oo)
+  x_2 is a continuous variable (min=0.0, max=+oo)
+Linear program saved to /Users/mclay/Programs/bsscl/taTa_2_5.sobj
 Linear Programming Solution = 0.7
 0.2 : {(0, 0): 5}
 0.5 : {(1, 1): 2}
-lower scl(ataT) = 0.15
+scl(taTa) = 0.15
 
 ********
 
@@ -61,24 +71,31 @@ Note: the output gets very big very quickly, consider redirecting output to a fi
 
 ** In a Sage session **
 
-Enter Sage and load the file scl.py via: 
+Enter Sage and load the files utils.py and scl.py via: 
 
-%attach 'scl.py'
+%attach "utils.py"
+%attach "scl.py"
 
-To compute lower bound on scl(g) enter:
-
-scl(g,m,l,v)
-
-where:
-      g is a string in a,A,t,T representing the element	
-      m integer
-      l integer
-      v verbosity, (default value is 0) 
+To compute lower bound on scl(g) use scl(g,m,l,v).
 
 Examples:
 
 sage: scl('ataT',2,5,1)
-The output is the same as above.
+m,l = 2,5
+g = taTa
+taTa is alternating
+Turn Degrees: [1, 1]
+Turn Types: [2, 1]
+Plotting turn graph...
+Turn graph saved to /Users/mclay/Programs/bsscl/taTa_2_5.png
+Setting up the linear programming problem...
+There are 3 variables.
+Variables saved to /Users/mclay/Programs/bsscl/x_taTa_2_5.sobj
+Linear program saved to /Users/mclay/Programs/bsscl/taTa_2_5.sobj
+Linear Programming Solution = 0.7
+0.2 : {(0, 0): 5}
+0.5 : {(1, 1): 2}
+scl(taTa) = 0.15
 
 sage: scl('ataT',2,5)
 0.15000000000000002

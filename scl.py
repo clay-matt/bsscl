@@ -5,14 +5,10 @@
 #                  http://www.gnu.org/licenses/ 
 #***************************************************************************** 
 
-from sage.all import *   # import sage library
-
-################################
-
 def scl(g,m,l,verbose = 0):
     # compute lower bound on scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
-
+    
     # verbosity levels:
     # 0: only return scl
     # 1: hide linear program and turn graph

@@ -16,10 +16,6 @@
 
 ################################
 
-from sage.graphs.digraph import *
-from sage.combinat.integer_vector import IntegerVectors
-from sage.rings.arith import gcd
-
 import re # regular expressions
     
 ################################

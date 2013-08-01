@@ -1,0 +1,32 @@
+#!/usr/bin/env sage -python
+
+import argparse # parse command line arguments
+
+# define command-line parser
+parser = argparse.ArgumentParser(prog='bsscl',
+                                description='Compute lower bound for scl(g) in BS(m,l)',
+                                epilog='Created by: Matt Clay, email:mattclay@uark.edu')
+parser.add_argument('g', metavar='g', help='string in a,A,t,T representing the element')
+parser.add_argument('m', type=int, help='non-zero integer')
+parser.add_argument('l', type=int, help='non-zero integer')
+parser.add_argument('-v','--verbose', action='count', help='increase output verbosity')
+
+# process command-line arguments
+args = parser.parse_args()
+
+# set variables from parser
+g_script = args.g
+m_script = args.m
+l_script = args.l
+verbose_script = args.verbose
+    
+from sage.all import * # load sage library
+
+load('utils.py') 
+load('scl.py')
+
+# compute scl
+scl_g = scl(g_script,m_script,l_script,verbose_script)
+
+# if verbose > 0 value is already displayed to screen
+if verbose_script == None: print scl_g
