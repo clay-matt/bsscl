@@ -15,18 +15,20 @@ Two ways to compute scl(g):
 
 ** Command-line **
 
-In the directory containing the files enter:
+usage: bsscl [-h] [-v] [-e name] g m l
 
-./bsscl [-h] [-v[v]] g m l
+Compute lower bound for scl(g) in BS(m,l)
 
 positional arguments:
-  g                      string in a,A,t,T representing the element
+  g                     string in a,A,t,T representing the element
   m                     non-zero integer
-  l                       non-zero integer
+  l                     non-zero integer
 
 optional arguments:
-  -h, --help       show this help message and exit
-  -v, --verbose  increase output verbosity
+  -h, --help            show this help message and exit
+  -v, --verbose         increase output verbosity
+  -e name, --element_name name
+                        element name used for creating files
 
 Verboisty Levels:
 -v: shows current process, where files are saved and linear program
@@ -76,7 +78,7 @@ Enter Sage and load the files utils.py and scl.py via:
 %attach "utils.py"
 %attach "scl.py"
 
-To compute lower bound on scl(g) use scl(g,m,l,v).
+To compute lower bound on scl(g) use scl(g,m,l,v,name).
 
 Examples:
 

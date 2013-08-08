@@ -5,7 +5,7 @@
 #                  http://www.gnu.org/licenses/ 
 #***************************************************************************** 
 
-def scl(g,m,l,verbose = 0):
+def scl(g,m,l,verbose = 0,g_name = None):
     # compute lower bound on scl of g where g is an element in
     # BS(m,l) = < a,t | t a^m T = a^l >
     
@@ -17,12 +17,16 @@ def scl(g,m,l,verbose = 0):
     MAX_nX = 100 # cap on number of variables to be displayed on screen
 
     if t_exp(g) != 0:
-        print 'scl({0}) is not defined as |{1}|_t != 0'.format(g,g)
-        return
+        message = 'scl({0}) is not defined as |{1}|_t != 0'.format(g,g)
+        if verbose > 0: print message
+        return message
 
+    # set default file name
+    if g_name == None: g_name = '{0}_{1}_{2}'.format(g,m,l)
+    
     # put g into normal form and cyclically reduce
     g = cyclic_normal(g,m,l)
-
+    
     # determine if g is alternating
     alt = is_alternating(g)
     
@@ -35,7 +39,6 @@ def scl(g,m,l,verbose = 0):
     if t_len(g) == 0:
         if verbose > 0:
             print 'scl({0}) = 0.0'.format(g)
-            return
         # end if verbose
         return 0.0
     
@@ -51,7 +54,7 @@ def scl(g,m,l,verbose = 0):
         print 'Plotting turn graph...'
         p = Gamma_g.graph.plot(graph_border=True,layout='circular')
         if verbose > 1: p.show()
-        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.png'.format(g,m,l))
+        filename = os.path.join(os.getcwd(),'{0}.png'.format(g_name))
         save(p,filename)
         print 'Turn graph saved to {0}'.format(filename)
         print 'Setting up the linear programming problem...'
@@ -72,7 +75,7 @@ def scl(g,m,l,verbose = 0):
                     if x[e] != 0:
                         non_zerox[e] = x[e]
                 print 'x_{0}: {1}'.format(i,non_zerox)
-        filename = os.path.join(os.getcwd(),'x_{0}_{1}_{2}.sobj'.format(g,m,l))
+        filename = os.path.join(os.getcwd(),'x_{0}.sobj'.format(g_name))
         save(X,filename)
         print 'Variables saved to {0}'.format(filename)
     # end if verbose
@@ -94,7 +97,7 @@ def scl(g,m,l,verbose = 0):
     if verbose > 0:
         if nX < MAX_nX and verbose > 1:
             lp.show()
-        filename = os.path.join(os.getcwd(),'{0}_{1}_{2}.sobj'.format(g,m,l))
+        filename = os.path.join(os.getcwd(),'{0}.sobj'.format(g_name))
         save(lp,filename)
         print 'Linear program saved to {0}'.format(filename)
     # end if verbose
@@ -118,7 +121,6 @@ def scl(g,m,l,verbose = 0):
     if verbose > 0:
         scl_str = 'scl' if alt else 'lower scl'
         print '{0}({1}) = {2}'.format(scl_str,g,scl)
-        return
     # end if verbose
     
     return scl
