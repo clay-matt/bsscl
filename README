@@ -42,6 +42,7 @@ $ ./bsscl ataT 2 5 -vv
 m,l = 2,5
 g = taTa
 taTa is alternating
+Extremal Surface: False
 Turn Degrees: [1, 1]
 Turn Types: [2, 1]
 Plotting turn graph...
@@ -78,14 +79,15 @@ Enter Sage and load the files utils.py and scl.py via:
 %attach "utils.py"
 %attach "scl.py"
 
-To compute lower bound on scl(g) use scl(g,m,l,v,name).
+To compute lower bound on scl(g) use scl(g,m,l,verbose,g_name).
 
 Examples:
 
-sage: scl('ataT',2,5,1)
+sage: scl('ataT',2,5,verbose = 1)
 m,l = 2,5
 g = taTa
 taTa is alternating
+Extremal Surface: False
 Turn Degrees: [1, 1]
 Turn Types: [2, 1]
 Plotting turn graph...

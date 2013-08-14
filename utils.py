@@ -145,6 +145,7 @@ def is_alternating(g):
     # determines if g is alternating
     # CAUTION: the program only determines if the given expression of
     # g is alternating 
+    if t_exp(g) != 0: return False
     g_t = t_len(g) # t length of g
     if g_t == 0: return True
     t_sub = re.split('[a]+',g,flags=re.IGNORECASE) # t subwords
@@ -158,6 +159,28 @@ def is_alternating(g):
         if t_sub[i-1] == t_sub[i]: return False
     return True
         
+################################
+
+def has_extremal_surface(g,m,l):
+    # determines if g (which is ASSUMED to be alternating AND in cyclic
+    # normal form) has an extremal surface
+    g_t = t_len(g)
+    if g_t == 0: return False
+    a_sub = re.split('[t]',g,flags=re.IGNORECASE) # a subwords
+    k = 1
+    i_sum = j_sum = 0
+    while k < g_t:
+        i_sign = 1 if a_sub[k][0] == 'a' else -1
+        j_sign = 1 if a_sub[k + 1][0] == 'a' else -1
+        i_sum = i_sum + i_sign*len(a_sub[k])
+        j_sum = j_sum + j_sign*len(a_sub[k + 1])
+        k = k + 2
+    if g[0] == 't':
+        r,s = l,m
+    else:
+        r,s = m,l
+    return r*i_sum == -s*j_sum
+
 ################################
 
 def turn_graph(g):
