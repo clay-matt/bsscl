@@ -110,6 +110,16 @@ def scl(g,m,l,verbose = 0,g_name = None):
     ndisks = lp.solve()
 
     if verbose > 0:
+        P = lp.polyhedron() # find optimal vertices
+        V = P.vertices_list()
+        OptV = []
+        for v in V:
+            if ndisks == sum(v[i] for i in Xi):
+                OptV.append(v)
+        print 'There are {0} optimal vertices.'.format(len(OptV))
+        filename = os.path.join(os.getcwd(),'v_{0}.sobj'.format(g_filename))
+        save(OptV,filename)
+        print 'Optimal vertices saved to {0}'.format(filename)
         print 'Linear Programming Solution = {0}'.format(ndisks)
         x_value = lp.get_values(x)
         for c in x_value.keys(): # only print edge crossed by disks

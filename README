@@ -40,19 +40,19 @@ Example:
 
 $ ./bsscl ataT 2 5 -vv
 m,l = 2,5
-g = taTa
-taTa is alternating
+ataT = taTa
+ataT is alternating
 Extremal Surface: False
 Turn Degrees: [1, 1]
 Turn Types: [2, 1]
 Plotting turn graph...
-Turn graph saved to /Users/mclay/Programs/bsscl/taTa_2_5.png
+Turn graph saved to /Users/mclay/Programs/bsscl/ataT_2_5.png
 Setting up the linear programming problem...
 There are 3 variables.
 x_0: {(0, 0): 5}
 x_1: {(1, 1): 2}
 x_2: {(1, 1): 4}
-Variables saved to /Users/mclay/Programs/bsscl/x_taTa_2_5.sobj
+Variables saved to /Users/mclay/Programs/bsscl/x_ataT_2_5.sobj
 Maximization:
   x_0 + x_1 + x_2
 Constraints:
@@ -62,11 +62,13 @@ Variables:
   x_0 is a continuous variable (min=0.0, max=+oo)
   x_1 is a continuous variable (min=0.0, max=+oo)
   x_2 is a continuous variable (min=0.0, max=+oo)
-Linear program saved to /Users/mclay/Programs/bsscl/taTa_2_5.sobj
+Linear program saved to /Users/mclay/Programs/bsscl/ataT_2_5.sobj
+There are 1 optimal vertices.
+Optimal vertices saved to /Users/mclay/Programs/bsscl/v_ataT_2_5.sobj
 Linear Programming Solution = 0.7
 0.2 : {(0, 0): 5}
 0.5 : {(1, 1): 2}
-scl(taTa) = 0.15
+scl(ataT) = 0.15
 
 ********
 
@@ -85,21 +87,24 @@ Examples:
 
 sage: scl('ataT',2,5,verbose = 1)
 m,l = 2,5
-g = taTa
-taTa is alternating
+ataT = taTa
+ataT is alternating
 Extremal Surface: False
 Turn Degrees: [1, 1]
 Turn Types: [2, 1]
 Plotting turn graph...
-Turn graph saved to /Users/mclay/Programs/bsscl/taTa_2_5.png
+Turn graph saved to /Users/mclay/Programs/bsscl/ataT_2_5.png
 Setting up the linear programming problem...
 There are 3 variables.
-Variables saved to /Users/mclay/Programs/bsscl/x_taTa_2_5.sobj
-Linear program saved to /Users/mclay/Programs/bsscl/taTa_2_5.sobj
+Variables saved to /Users/mclay/Programs/bsscl/x_ataT_2_5.sobj
+Linear program saved to /Users/mclay/Programs/bsscl/ataT_2_5.sobj
+There are 1 optimal vertices.
+Optimal vertices saved to /Users/mclay/Programs/bsscl/v_ataT_2_5.sobj
 Linear Programming Solution = 0.7
 0.2 : {(0, 0): 5}
 0.5 : {(1, 1): 2}
-scl(taTa) = 0.15
+scl(ataT) = 0.15
+0.15000000000000002
 
 sage: scl('ataT',2,5)
 0.15000000000000002
